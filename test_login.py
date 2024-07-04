@@ -9,13 +9,14 @@ from selenium.webdriver.support import expected_conditions as Ec
 # url
 URL='https://magento.softwaretestingboard.com/'
 
-@pytest.mark.parametrize('user,password,expected',
-                         [('niyog1994@gmail.com','Test@123','Welcome, Niyog V!'), ## valid cred
-                          ('niyog1994@gmail.com','test@123','Support This Project'), ## invalid cred
-                          ('niyog1994@gmail.com','','Support This Project'), ## without password
-                          ('','Test@123','Support This Project'), ## without mail
-                          ('','','Support This Project') ## without mail and password
-                         ])
+testdata=[('niyog1994@gmail.com','Test@123','Welcome, Niyog V!'), ## valid cred
+          ('niyog1994@gmail.com','test@123','Support This Project'), ## invalid cred
+          ('niyog1994@gmail.com','','Support This Project'), ## without password
+          ('','Test@123','Support This Project'), ## without mail
+          ('','','Support This Project') ## without mail and password
+          ]
+
+@pytest.mark.parametrize('user,password,expected',testdata)
 def test_login(user,password,expected):
     driver=webdriver.Chrome()
     driver.get(URL)
@@ -24,7 +25,6 @@ def test_login(user,password,expected):
     wait.until(Ec.presence_of_element_located((By.XPATH, '//*[@id="email"]'))).send_keys(user)
     wait.until(Ec.presence_of_element_located((By.XPATH, '//*[@id="pass"]'))).send_keys(password)
     driver.find_element(By.XPATH, '//*[@id="send2"]').click()
-    time.sleep(2)
+    time.sleep(4)
     check=wait.until(Ec.presence_of_element_located((By.XPATH, '//ul[@class="header links"]/li/span')))
     assert check.text==expected
-
